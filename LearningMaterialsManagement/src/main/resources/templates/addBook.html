@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add book</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h1 class="text-center mb-4">Thêm sách mới</h1>
+                    <form th:action="@{/books/create}" th:object="${book}" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Tên sách:</label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Gía tiền:</label>
+                            <input type="text" id="price" th:field="*{price}" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Miêu tả sách:</label>
+                            <textarea id="description" th:field="*{description}" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Số lượng:</label>
+                            <input type="text" id="amount" th:field="*{amount}" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="publisherId">Nhà xuất bản:</label>
+                            <select id="publisherId" name="publisherId" th:field="*{publisherId}" class="form-control" required>
+                                <option th:each="publisher : ${publishers}" th:value="${publisher.id}" th:text="${publisher.namePublisher}" 
+                                        th:selected="${publisher.id == book.publisherId}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="authors">Chọn tác giả:</label>
+                            <select id="authors" name="authorIds" multiple class="form-control">
+                                <option th:each="author : ${authors}" 
+                                        th:value="${author.id}" 
+                                        th:text="${author.fullNameAuthor}">
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="categories">Chọn thể loại sách:</label>
+                            <select id="categories" name="categoryIds" multiple class="form-control">
+                                <option th:each="category : ${categories}" 
+                                        th:value="${category.id}" 
+                                        th:text="${category.nameCategory}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="file">Ảnh sách:</label>
+                            <input type="file" id="file" th:field="*{file}" class="form-control-file"/>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Thêm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+

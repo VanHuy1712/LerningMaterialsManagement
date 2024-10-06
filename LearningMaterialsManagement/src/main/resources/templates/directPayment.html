@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thanh toán trực tiếp</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div class="container mt-5">
+            <h1>Thanh toán trực tiếp</h1>
+            <form action="/cart/confirm-direct-payment" method="post">
+                <div class="form-group">
+                    <label>Họ và Tên</label>
+                    <input type="text" th:value="${fullName}" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="text" th:value="${phone}" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" th:value="${email}" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Số định danh</label>
+                    <input type="text" th:value="${identityNumber}" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ nhận hàng</label>
+                    <input type="text" th:value="${direct}" class="form-control" readonly> <!-- Địa chỉ không chỉnh sửa -->
+                </div>
+                <button type="submit" class="btn btn-primary">Xác nhận</button>
+            </form>
+        </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>

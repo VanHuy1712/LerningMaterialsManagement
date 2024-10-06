@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Category List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div class="container mt-5">
+            <h1 class="text-center">Danh sách thể loại</h1>
+            
+            <!-- Thanh tìm kiếm -->
+            <form th:action="@{/categories}" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" placeholder="Nhập tên vai trò để tìm kiếm" aria-label="Nhập tên vai trò" th:value="${param.keyword}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
+                    </div>
+                </div>
+            </form>
+            
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>STT</th>
+                        <th>Thể loại sách</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="category, iterStat : ${cateList}">
+                        <td th:text="${iterStat.index + 1}">1</td> <!-- Serial number -->
+                        <td th:text="${category.nameCategory}">Tên nhà xuất bản</td>
+                        <td>
+                            <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-primary btn-sm">Sửa</a>
+                            <form th:action="@{/categories/delete/{id}(id=${category.id})}" method="post" style="display:inline;">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn btn-danger btn-sm" 
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này?');">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a th:href="@{/categories/create}" class="btn btn-success">Thêm thể loại sách mới</a>
+        </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>

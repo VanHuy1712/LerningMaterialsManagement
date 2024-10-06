@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <div th:replace="~{fragments/header :: header}"></div>
+
+        <div class="container mt-5 flex-grow-1">
+            <h1 class="text-center">Welcome to the Learning Management System</h1>
+
+            <form th:action="@{/}" method="get">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Tên sách</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Nhập tên sách">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="namePublisher">Tên nhà xuất bản</label>
+                        <input type="text" id="namePublisher" name="namePublisher" class="form-control" placeholder="Nhập tên nhà xuất bản">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="fullNameAuthor">Tên tác giả</label>
+                        <input type="text" id="fullNameAuthor" name="fullNameAuthor" class="form-control" placeholder="Nhập tên tác giả">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="nameCategory">Tên thể loại</label>
+                        <input type="text" id="nameCategory" name="nameCategory" class="form-control" placeholder="Nhập tên thể loại">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="minPrice">Giá từ</label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Giá thấp nhất">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="maxPrice">Giá đến</label>
+                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Giá cao nhất">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-3">Tìm kiếm</button>
+            </form>
+
+            <div class="row">
+                <div class="col-md-3" th:each="book : ${books}">
+                    <div class="card mb-4 shadow-sm">
+                        <img th:src="${book.avatarBook}" alt="Ảnh sách" class="card-img-top" style="object-fit: cover; height: 200px;">
+                        <div class="card-body text-center">
+                            <h5 th:text="${book.name}"></h5>
+                            <p class="card-text" th:text="${book.price} + ' VNĐ'"></p>
+                            <div class="input-group mb-3">
+                                <button class="btn btn-outline-secondary" type="button" th:onclick="|decreaseQuantity(${book.id})|">-</button>
+                                <input type="number" th:id="'quantity-' + ${book.id}" class="form-control text-center" value="1" min="1" readonly>
+                                <button class="btn btn-outline-secondary" type="button" th:onclick="|increaseQuantity(${book.id})|">+</button>
+                            </div>
+
+                            <button class="btn btn-primary" th:onclick="'addToCart(' + ${book.id} + ')'">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a th:href="@{/cart}" class="btn btn-success position-fixed" style="bottom: 20px; right: 20px;">
+                <i class="fas fa-shopping-cart"></i> Giỏ hàng (<span id="cart-count">0</span>)
+            </a>
+        </div>
+
+        <script>
+            let cartCount = 0;
+
+            function increaseQuantity(bookId) {
+                const quantityInput = document.getElementById(`quantity-${bookId}`);
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+            }
+
+            function decreaseQuantity(bookId) {
+                const quantityInput = document.getElementById(`quantity-${bookId}`);
+                if (quantityInput.value > 1) {
+                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                }
+            }
+
+            function addToCart(bookId) {
+                const quantity = document.getElementById(`quantity-${bookId}`).value;
+
+                // Gọi API để thêm vào giỏ hàng
+                $.post("/cart/add", {bookId: bookId, quantity: quantity}, function (response) {
+                    cartCount += parseInt(quantity);
+                    document.getElementById("cart-count").innerText = cartCount;
+                    alert(response); // Thông báo khi thêm thành công
+                });
+            }
+        </script>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>
+
+

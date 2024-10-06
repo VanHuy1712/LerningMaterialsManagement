@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Danh Sách Sách</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"> 
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <div class="container mt-4">
+            <h1 class="text-center">Danh sách sách</h1>
+
+            <form th:action="@{/books}" method="get">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Tên sách</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Nhập tên sách">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="namePublisher">Tên nhà xuất bản</label>
+                        <input type="text" id="namePublisher" name="namePublisher" class="form-control" placeholder="Nhập tên nhà xuất bản">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="fullNameAuthor">Tên tác giả</label>
+                        <input type="text" id="fullNameAuthor" name="fullNameAuthor" class="form-control" placeholder="Nhập tên tác giả">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="nameCategory">Tên thể loại</label>
+                        <input type="text" id="nameCategory" name="nameCategory" class="form-control" placeholder="Nhập tên thể loại">
+                    </div>
+                </div>
+
+                <!-- Sử dụng Bootstrap Grid để đặt 2 trường giá tiền trên cùng một hàng -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="minPrice">Giá từ</label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Giá thấp nhất">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="maxPrice">Giá đến</label>
+                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Giá cao nhất">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-3">Tìm kiếm</button>
+            </form>
+
+            <div class="row">
+                <!-- Hiển thị sách -->
+                <div class="col-md-3" th:each="book : ${books}">
+                    <div class="card mb-4 shadow-sm d-flex flex-column"> <!-- Thêm lớp d-flex flex-column -->
+                        <img th:src="${book.avatarBook}" alt="Ảnh sách" class="card-img-top" width="150" height="200" style="object-fit: cover;"> 
+                        <div class="card-body text-center flex-grow-1"> <!-- Thêm lớp flex-grow-1 -->
+                            <h5 th:text="${book.name}"></h5>
+                            <p class="card-text" th:text="${book.price} + ' VNĐ'"></p>
+                            <p th:text="'Số lượng sách: ' + ${book.amount}"></p>
+                            <div class="d-flex justify-content-center">
+                                <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-warning mr-2">Sửa</a>
+                                <a th:href="@{/books/delete/{id}(id=${book.id})}" class="btn btn-danger"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa sách này?')">Xóa</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phân trang -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${currentPage > 0}">
+                        <a th:href="@{/books(page=${currentPage - 1}, size=${8})}" class="page-link">Trước</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/books(page=${i}, size=${8})}" class="page-link" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:if="${currentPage < totalPages - 1}">
+                        <a th:href="@{/books(page=${currentPage + 1}, size=${8})}" class="page-link">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+            <a th:href="@{/books/create}" class="btn btn-success">Thêm sách mới</a>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"></script>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>
+

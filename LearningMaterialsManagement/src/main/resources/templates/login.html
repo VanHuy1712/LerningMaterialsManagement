@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="text-center mt-5">Login</h2>
+
+            <form th:action="@{/login}" method="post"> <!-- Đổi đường dẫn thành /login -->
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+
+            <div th:if="${param.error}">
+                <p class="text-danger text-center">Invalid username or password.</p>
+            </div>
+
+            <div th:if="${param.logout}">
+                <p class="text-success text-center">You have been logged out successfully.</p>
+            </div>
+            
+            <div class="text-center mt-3"> <!-- Thêm khoảng cách phía trên -->
+                <p>Bạn chưa có tài khoản? <a th:href="@{/register}">Đăng ký</a></p> <!-- Thay đổi đường dẫn nếu cần -->
+            </div>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
