@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
 
-                <!-- Sử dụng Bootstrap Grid để đặt 2 trường giá tiền trên cùng một hàng -->
+                <!--Sử dụng Bootstrap Grid để đặt 2 trường giá tiền trên cùng một hàng--> 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="minPrice">Giá từ</label>
@@ -57,11 +57,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </form>
 
             <div class="row">
-                <!-- Hiển thị sách -->
+                <!--Hiển thị sách--> 
                 <div class="col-md-3" th:each="book : ${books}">
-                    <div class="card mb-4 shadow-sm d-flex flex-column"> <!-- Thêm lớp d-flex flex-column -->
+                    <div class="card mb-4 shadow-sm d-flex flex-column">  <!--Thêm lớp d-flex flex-column--> 
                         <img th:src="${book.avatarBook}" alt="Ảnh sách" class="card-img-top" width="150" height="200" style="object-fit: cover;"> 
-                        <div class="card-body text-center flex-grow-1"> <!-- Thêm lớp flex-grow-1 -->
+                        <div class="card-body text-center flex-grow-1">  <!--Thêm lớp flex-grow-1 -->
                             <h5 th:text="${book.name}"></h5>
                             <p class="card-text" th:text="${book.price} + ' VNĐ'"></p>
                             <p th:text="'Số lượng sách: ' + ${book.amount}"></p>
@@ -76,26 +76,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
 
             <!-- Phân trang -->
-            <nav>
+            <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" th:if="${currentPage > 0}">
-                        <a th:href="@{/books(page=${currentPage - 1}, size=${8})}" class="page-link">Trước</a>
+                    <li class="page-item" th:class="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/books(page=${currentPage - 1}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
                     </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                        <a th:href="@{/books(page=${i}, size=${8})}" class="page-link" th:text="${i + 1}"></a>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/books(page=${i}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" th:text="${i + 1}"></a>
                     </li>
-                    <li class="page-item" th:if="${currentPage < totalPages - 1}">
-                        <a th:href="@{/books(page=${currentPage + 1}, size=${8})}" class="page-link">Sau</a>
+                    <li class="page-item" th:class="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/books(page=${currentPage + 1}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
                     </li>
                 </ul>
             </nav>
-            <a th:href="@{/books/create}" class="btn btn-success">Thêm sách mới</a>
+            <a th:href="@{/books/create}" class="btn btn-success mb-3">Thêm sách mới</a>
         </div>
-
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"></script>
-
         <div th:replace="~{fragments/footer :: footer}"></div>
     </body>
 </html>

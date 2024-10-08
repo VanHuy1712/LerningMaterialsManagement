@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BookService {
+
     @Autowired
     private BookRepository bookRepo;
     @Autowired
@@ -41,7 +42,7 @@ public class BookService {
     private CategoryRepository categoryRepo;
     @Autowired
     private DetailCategoryBookRepository detailCategoryBookRepo;
-    
+
     // Lấy tất cả danh mục
     public List<Book> getBooks() {
         return bookRepo.findAll();
@@ -55,15 +56,14 @@ public class BookService {
         book.setDescription(book.getDescription());
         book.setAmount(book.getAmount());
         book.setPublisherId(book.getPublisherId());
-        
+
         if (book.getFile() != null && !book.getFile().isEmpty()) {
             // Upload the image to Cloudinary and get the URL
             String imageUrl = cloudinaryService.uploadImage(book.getFile());
             book.setAvatarBook(imageUrl);// Set the URL as the avatar field
         }
-        
-//        return bookRepo.save(book);
 
+//        return bookRepo.save(book);
         Book savedBook = bookRepo.save(book);
 
         // Lưu thông tin vào bảng DetailAuthorBook
@@ -74,38 +74,37 @@ public class BookService {
             detail.setAuthorId(author);
             detailAuthorBookRepo.save(detail);
         }
-        
+
         // Lưu thông tin vào bảng DetailCategoryBook
-    for (Integer categoryId : categoryIds) {
-        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        DetailCategoryBook detail = new DetailCategoryBook();
-        detail.setBookId(savedBook);
-        detail.setCategoryId(category);
-        detailCategoryBookRepo.save(detail);
-    }
+        for (Integer categoryId : categoryIds) {
+            Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            DetailCategoryBook detail = new DetailCategoryBook();
+            detail.setBookId(savedBook);
+            detail.setCategoryId(category);
+            detailCategoryBookRepo.save(detail);
+        }
 
         return savedBook;
     }
 
     // Chức năng sửa (Update)
-    public Book updateBook(Integer id, Book book, List<Integer> authorIds, List<Integer> categoryIds) throws IOException{;
-        
+    public Book updateBook(Integer id, Book book, List<Integer> authorIds, List<Integer> categoryIds) throws IOException {;
+
         Book existingBook = bookRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        
+
         existingBook.setName(book.getName());
         existingBook.setPrice(book.getPrice());
         existingBook.setAmount(book.getAmount());
         existingBook.setDescription(book.getDescription());
         existingBook.setPublisherId(book.getPublisherId());
-        
+
         if (book.getFile() != null && !book.getFile().isEmpty()) {
             // Upload the image to Cloudinary and get the URL
             String imageUrl = cloudinaryService.uploadImage(book.getFile());
             existingBook.setAvatarBook(imageUrl);// Set the URL as the avatar field
         }
-        
-//        return bookRepo.save(existingBook);
 
+//        return bookRepo.save(existingBook);
         Book updatedBook = bookRepo.save(existingBook);
 
         // Cập nhật các tác giả
@@ -131,7 +130,7 @@ public class BookService {
                 detailAuthorBookRepo.save(newDetail);
             }
         }
-        
+
         // Cập nhật các thể loại
         List<DetailCategoryBook> existingCategoryDetails = detailCategoryBookRepo.findByBookId(updatedBook);
 
@@ -163,17 +162,17 @@ public class BookService {
     public void deleteBook(Integer id) {
         bookRepo.deleteById(id);
     }
-    
+
+    public Book getBookById(Integer id) {
+        return bookRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
+    }
+
     // Method to get paginated books
     public Page<Book> getBooksPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return bookRepo.findAll(pageable);
     }
-    
-    public Book getBookById(Integer id) {
-        return bookRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
-    }
-    
+
     //Khong phan trang
     public List<Book> searchBooks(String name, String namePublisher, String fullNameAuthor, String nameCategory, Long minPrice, Long maxPrice) {
         return bookRepo.findBooksByCriteria(name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
@@ -183,6 +182,12 @@ public class BookService {
     // Update this method to return paginated results
     public Page<Book> getBooksPaginated(int page, int size, String name, String namePublisher, String fullNameAuthor, String nameCategory, Long minPrice, Long maxPrice) {
         Pageable pageable = PageRequest.of(page, size);
-        return bookRepo.findAllByCriteria(pageable, name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
+        return bookRepo.findAll(pageable);
     }
+
+    public Page<Book> getAllBooksPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookRepo.findAll(pageable);
+    }
+
 }

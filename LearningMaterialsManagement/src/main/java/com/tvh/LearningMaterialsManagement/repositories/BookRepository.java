@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    public Page<Book> findAll(Pageable pageable);
+    Page<Book> findAll(Pageable pageable);
 
     //Truy vấn này không có phân trang
     // Paginated search
@@ -42,19 +42,19 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             @Param("minPrice") Long minPrice,
             @Param("maxPrice") Long maxPrice);
 
-    //Truy vấn này có phân trang
-    // Paginated version of the search
+//    //Truy vấn này có phân trang
+//    // Paginated version of the search
     @Query("SELECT b FROM Book b "
             + "LEFT JOIN b.detailAuthorBookSet dA "
             + "LEFT JOIN b.detailCategoryBookSet dC "
-            + "WHERE "
-            + "(:name IS NULL OR b.name LIKE %:name%) AND "
-            + "(:namePublisher IS NULL OR b.publisherId.namePublisher LIKE %:namePublisher%) AND "
-            + "(:fullNameAuthor IS NULL OR dA.authorId.fullNameAuthor LIKE %:fullNameAuthor%) AND "
-            + "(:nameCategory IS NULL OR dC.categoryId.nameCategory LIKE %:nameCategory%) AND "
-            + "(:minPrice IS NULL OR b.price >= :minPrice) AND "
-            + "(:maxPrice IS NULL OR b.price <= :maxPrice)")
-    Page<Book> findAllByCriteria(Pageable pageable, @Param("name") String name,
+            + "WHERE (:name IS NULL OR b.name LIKE %:name%) "
+            + "AND (:namePublisher IS NULL OR b.publisherId.namePublisher LIKE %:namePublisher%) "
+            + "AND (:fullNameAuthor IS NULL OR dA.authorId.fullNameAuthor LIKE %:fullNameAuthor%) "
+            + "AND (:nameCategory IS NULL OR dC.categoryId.nameCategory LIKE %:nameCategory%) "
+            + "AND (:minPrice IS NULL OR b.price >= :minPrice) "
+            + "AND (:maxPrice IS NULL OR b.price <= :maxPrice)")
+    Page<Book> findAllByCriteria(Pageable pageable,
+            @Param("name") String name,
             @Param("namePublisher") String namePublisher,
             @Param("fullNameAuthor") String fullNameAuthor,
             @Param("nameCategory") String nameCategory,

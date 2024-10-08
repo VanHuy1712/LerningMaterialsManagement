@@ -82,6 +82,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </a>
         </div>
 
+        <!-- Phân trang -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:class="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/books(page=${currentPage - 1}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/books(page=${i}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:class="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/books(page=${currentPage + 1}, size=${size}, name=${name}, namePublisher=${namePublisher}, fullNameAuthor=${fullNameAuthor}, nameCategory=${nameCategory}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        
         <script>
             let cartCount = 0;
 
@@ -97,14 +116,35 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 }
             }
 
+//            function addToCart(bookId) {
+//                const quantity = document.getElementById(`quantity-${bookId}`).value;
+//
+//                // Gọi API để thêm vào giỏ hàng
+//                $.post("/cart/add", {bookId: bookId, quantity: quantity}, function (response) {
+//                    cartCount += parseInt(quantity);
+//                    document.getElementById("cart-count").innerText = cartCount;
+//                    alert(response); // Thông báo khi thêm thành công
+//                });
+//            }
             function addToCart(bookId) {
                 const quantity = document.getElementById(`quantity-${bookId}`).value;
 
-                // Gọi API để thêm vào giỏ hàng
-                $.post("/cart/add", {bookId: bookId, quantity: quantity}, function (response) {
-                    cartCount += parseInt(quantity);
-                    document.getElementById("cart-count").innerText = cartCount;
-                    alert(response); // Thông báo khi thêm thành công
+                $.post({
+                    url: "/cart/add",
+                    data: {
+                        bookId: bookId,
+                        quantity: quantity,
+                        // Thêm CSRF token vào đây
+                        _csrf: $('input[name="_csrf"]').val()
+                    },
+                    success: function (response) {
+                        cartCount += parseInt(quantity);
+                        document.getElementById("cart-count").innerText = cartCount;
+                        alert(response); // Thông báo khi thêm thành công
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Có lỗi xảy ra: " + xhr.responseText);
+                    }
                 });
             }
         </script>

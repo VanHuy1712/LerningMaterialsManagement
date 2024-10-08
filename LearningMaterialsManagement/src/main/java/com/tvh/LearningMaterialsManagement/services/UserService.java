@@ -11,9 +11,12 @@ import com.tvh.LearningMaterialsManagement.repositories.UserRepository;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +28,7 @@ import org.springframework.stereotype.Service;
  * @author Huy
  */
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepo;
@@ -49,8 +52,8 @@ public class UserService implements UserDetailsService{
     public List<User> findByFullName(String fullname) {
         return userRepo.findByFullName(fullname);
     }
-    
-    public User findbyUsername(String username){
+
+    public User findbyUsername(String username) {
         return userRepo.findByUsername(username);
     }
 
@@ -110,20 +113,51 @@ public class UserService implements UserDetailsService{
 
         return userRepo.save(existingUser);  // Lưu lại thông tin người dùng đã được cập nhật
     }
-    
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepo.findByUsername(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User not found");
+//        }
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), 
+//                user.getPassword(), 
+//                user.getAuthorities()
+//        );
+//    }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username); // Fetch user from repository
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // Assign roles based on roleId
+        if (user.getRoleId() != null) {
+            switch (user.getRoleId().getId()) {
+                case 1:
+                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN")); // Admin role
+                    break;
+                case 2:
+                    authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE")); // Employee role
+                    break;
+                case 3:
+                    authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER")); // Customer role
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), 
-                user.getPassword(), 
-                user.getAuthorities()
+                user.getUsername(),
+                user.getPassword(),
+                authorities // Pass the authorities we created
         );
     }
-    
+
     public List<User> searchUsers(String username, String email, String phone, String fullName) {
         // Thực hiện truy vấn để tìm kiếm người dùng dựa trên các trường nhập vào
         return userRepo.findByUsernameContainingIgnoreCaseAndEmailContainingIgnoreCaseAndPhoneContainingIgnoreCaseAndFullNameContainingIgnoreCase(username, email, phone, fullName);

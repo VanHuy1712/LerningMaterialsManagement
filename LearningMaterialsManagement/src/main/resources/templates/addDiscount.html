@@ -3,6 +3,7 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
@@ -22,12 +23,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <input type="text" id="discountCode" th:field="*{discountCode}" class="form-control" required/>
                         </div>
 
+                        <div class="form-group">
+                            <label for="percentDiscount">Phần trăm giảm giá:</label>
+                            <input type="number" id="percentDiscount" th:field="*{percentDiscount}" class="form-control" min="0" max="100" required/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary btn-block">Thêm</button>
                     </form>
                 </div>
             </div>
         </div>
-    </form>
-    <div th:replace="~{fragments/footer :: footer}"></div>
-</body>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
 </html>

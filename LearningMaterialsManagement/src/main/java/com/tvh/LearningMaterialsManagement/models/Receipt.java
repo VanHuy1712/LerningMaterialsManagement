@@ -48,6 +48,7 @@ public class Receipt implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_date")
+//    @Temporal(TemporalTypeTemporalType.TIMESTAMP)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
@@ -131,19 +132,19 @@ public class Receipt implements Serializable {
         return "com.tvh.LearningMaterialsManagement.models.Receipt[ id=" + id + " ]";
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

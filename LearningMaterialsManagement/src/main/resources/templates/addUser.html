@@ -39,7 +39,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <div class="form-group">
                             <label for="birthday">Ngày sinh:</label>
-                            <input type="text" id="birthday" th:field="*{birthday}" class="form-control" required/>
+                            <input type="date" id="birthday" th:field="*{birthday}" class="form-control" required/>
                         </div>
                         
                         <div class="form-group">
@@ -58,6 +58,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </div>
 
                         <div class="form-group">
+                            <label for="confirmPassword">Nhập lại mật khẩu:</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
                             <label for="file">Ảnh đại diện:</label>
                             <input type="file" id="file" th:field="*{file}" class="form-control-file"/>
                         </div>
@@ -68,6 +73,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
         </div>
     </form>
+    
+    <script>
+    document.querySelector("form").addEventListener("submit", function(event) {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        
+        if (password !== confirmPassword) {
+            event.preventDefault(); // Ngăn chặn gửi form
+            alert("Mật khẩu không khớp. Vui lòng nhập lại.");
+        }
+    });
+    </script>
+    
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

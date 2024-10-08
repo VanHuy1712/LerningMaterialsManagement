@@ -63,9 +63,28 @@ public class UserController {
         return "addUser";  // Trả về trang HTML createUser
     }
 
-    // Xử lý yêu cầu thêm mới người dùng
+//    // Xử lý yêu cầu thêm mới người dùng
+//    @PostMapping("/create")
+//    public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+//        try {
+//            userService.createUser(user);  // Gọi tới service để lưu người dùng mới
+//            redirectAttributes.addFlashAttribute("successMessage", "Thêm người dùng thành công!"); // Thêm thông báo thành công
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi thêm người dùng."); // Thêm thông báo lỗi
+//        }
+//        return "redirect:/users";  // Chuyển hướng về trang danh sách người dùng
+//    }
     @PostMapping("/create")
-    public String createUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+    public String createUser(@ModelAttribute User user,
+            @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+        // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp nhau không
+        if (!user.getPassword().equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu và xác nhận mật khẩu không khớp!");
+            return "redirect:/users/create";  // Trả lại form nếu có lỗi
+        }
+
         try {
             userService.createUser(user);  // Gọi tới service để lưu người dùng mới
             redirectAttributes.addFlashAttribute("successMessage", "Thêm người dùng thành công!"); // Thêm thông báo thành công
@@ -73,6 +92,7 @@ public class UserController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi thêm người dùng."); // Thêm thông báo lỗi
         }
+
         return "redirect:/users";  // Chuyển hướng về trang danh sách người dùng
     }
 

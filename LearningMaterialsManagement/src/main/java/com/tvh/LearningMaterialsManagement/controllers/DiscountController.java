@@ -50,16 +50,17 @@ public class DiscountController {
 
     @GetMapping("/edit/{id}")
     public String editDiscount(@PathVariable("id") int id, Model model) {
-        Discount role = discountService.getDiscountById(id);
-        model.addAttribute("publisher", role);
+        Discount discount = discountService.getDiscountById(id);
+        model.addAttribute("discount", discount);
         return "editDiscount";
     }
 
     @PostMapping("/edit/{id}")
-    public String updateDiscount(@PathVariable("id") int id, @ModelAttribute("role") Discount discount, Model model) {
+    public String updateDiscount(@PathVariable("id") int id, @ModelAttribute("discount") Discount discount, Model model) {
         Discount existingDiscount = discountService.getDiscountById(id);
         
         existingDiscount.setDiscountCode(discount.getDiscountCode()); 
+        existingDiscount.setPercentDiscount(discount.getPercentDiscount());
         discountService.addDiscount(existingDiscount);
 
         return "redirect:/discounts"; // Chuyển hướng về trang danh sách vai trò sau khi cập nhật thành công

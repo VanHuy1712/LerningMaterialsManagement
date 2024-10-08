@@ -59,19 +59,31 @@ public class User implements Serializable, UserDetails {
     @Size(min = 1, max = 50)
     @Column(name = "full_name")
     private String fullName;
-    @Size(max = 250)
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 250)
     @Column(name = "direct")
     private String direct;
-    @Size(max = 50)
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 50)
     @Column(name = "email")
     private String email;
-    @Size(max = 10)
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 10)
     @Column(name = "phone")
     private String phone;
-    @Size(max = 15)
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 15)
     @Column(name = "identity_number")
     private String identityNumber;
-    @Size(max = 125)
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 125)
     @Column(name = "avatar")
     private String avatar;
     @Basic(optional = false)

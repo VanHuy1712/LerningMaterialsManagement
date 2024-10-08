@@ -6,22 +6,12 @@ package com.tvh.LearningMaterialsManagement.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.tvh.LearningMaterialsManagement.services.UserService;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -31,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Autowired
     private CustomAuthenticationSuccessHandler successHandler;
 
@@ -55,13 +45,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection for simplicity, enable for production use
                 .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/categories/**").permitAll()
-                .requestMatchers("/discounts/**").permitAll()
-                .requestMatchers("/books/**").permitAll()
-                .requestMatchers("/publishers/**").permitAll()
-                .requestMatchers("/users/**").permitAll()
-                .requestMatchers("/roles/**").permitAll()
-                .requestMatchers("/", "/login", "/users/create", "/**").permitAll() // Public access to login and register
+                //                .requestMatchers("/categories/**").permitAll()
+                //                .requestMatchers("/discounts/**").permitAll()
+                //                .requestMatchers("/books/**").permitAll()
+                //                .requestMatchers("/publishers/**").permitAll()
+                //                .requestMatchers("/users/**").permitAll()
+                //                .requestMatchers("/roles/**").permitAll()
+                //                .requestMatchers("/", "/login", "/users/create", "/**").permitAll() // Public access to login and register
+                //                .anyRequest().authenticated() // Require authentication for all other requests
+
+                .requestMatchers("/books/**").hasAnyRole("ADMIN", "EMPLOYEE") // Only Admin and Employee can access /books
+                .requestMatchers("/publishers/**").hasAnyRole("ADMIN", "EMPLOYEE") // Only Admin and Employee can access /publishers
+                .requestMatchers("/discounts/**").hasAnyRole("ADMIN", "EMPLOYEE") // Only Admin and Employee can access /discounts
+                .requestMatchers("/categories/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/receipts/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/authors/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .requestMatchers("/", "/login", "/users/create", "/cart", "/cart/**", // Public access to certain routes
+                        "/books", "/books?page=**",  // Allow access to all book pages
+                        "/?name=*&namePublisher=*&fullNameAuthor=*&nameCategory=*&minPrice=*&maxPrice=*").permitAll() // Allow any values for these parameters
+                .requestMatchers("/**", "/users/**").hasRole("ADMIN") // Admin can access everything else
                 .anyRequest().authenticated() // Require authentication for all other requests
                 ).formLogin(form -> form
                 .loginPage("/login")

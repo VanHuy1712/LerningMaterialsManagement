@@ -3,13 +3,13 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Discount List</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
     </head>
     <body>
         <div th:replace="~{fragments/header :: header}"></div>
@@ -20,6 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <tr>
                         <th>STT</th>
                         <th>Mã giảm giá</th>
+                        <th>Phần trăm giảm</th> <!-- Thêm cột phần trăm giảm -->
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -27,12 +28,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <tr th:each="discount, iterStat : ${discountList}">
                         <td th:text="${iterStat.index + 1}">1</td> <!-- Serial number -->
                         <td th:text="${discount.discountCode}">Mã giảm giá</td>
+                        <td th:text="${discount.percentDiscount}">Phần trăm giảm</td> <!-- Hiển thị phần trăm giảm giá -->
                         <td>
                             <a th:href="@{/discounts/edit/{id}(id=${discount.id})}" class="btn btn-primary btn-sm">Sửa</a>
                             <form th:action="@{/discounts/delete/{id}(id=${discount.id})}" method="post" style="display:inline;">
                                 <input type="hidden" name="_method" value="delete"/>
                                 <button type="submit" class="btn btn-danger btn-sm" 
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này?');">Xóa</button>
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">Xóa</button>
                             </form>
                         </td>
                     </tr>
@@ -43,3 +45,4 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <div th:replace="~{fragments/footer :: footer}"></div>
     </body>
 </html>
+

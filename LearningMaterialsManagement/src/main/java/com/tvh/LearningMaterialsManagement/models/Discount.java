@@ -38,6 +38,10 @@ public class Discount implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "discount_code")
     private String discountCode;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "percent_discount")
+    private float percentDiscount;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -108,6 +112,14 @@ public class Discount implements Serializable {
     @Override
     public String toString() {
         return "com.tvh.LearningMaterialsManagement.models.Discount[ id=" + id + " ]";
+    }
+
+    public float getPercentDiscount() {
+        return percentDiscount;
+    }
+
+    public void setPercentDiscount(float percentDiscount) {
+        this.percentDiscount = percentDiscount;
     }
     
 }

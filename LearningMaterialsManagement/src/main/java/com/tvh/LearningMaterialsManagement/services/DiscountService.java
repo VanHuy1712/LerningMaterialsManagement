@@ -38,4 +38,8 @@ public class DiscountService {
     public Discount getDiscountById(Integer id) {
         return discountRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
     }
+    
+    public Discount getDiscountByCode(String code) {
+        return discountRepo.findByDiscountCode(code);
+    }
 }

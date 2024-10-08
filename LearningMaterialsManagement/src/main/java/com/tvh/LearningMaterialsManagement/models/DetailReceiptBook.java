@@ -125,6 +125,14 @@ public class DetailReceiptBook implements Serializable {
         this.totalUnitPrice = totalUnitPrice;
     }
 
+//    public BigInteger getTotalUnitPrice() {
+//        return totalUnitPrice;
+//    }
+//
+//    public void setTotalUnitPrice(BigInteger totalUnitPrice) {
+//        this.totalUnitPrice = totalUnitPrice;
+//    }
+
     public String getContent() {
         return content;
     }
