@@ -61,9 +61,8 @@ public class SecurityConfig {
                 .requestMatchers("/receipts/**").hasAnyRole("ADMIN", "EMPLOYEE")
                 .requestMatchers("/authors/**").hasAnyRole("ADMIN", "EMPLOYEE")
                 .requestMatchers("/", "/login", "/users/create", "/cart", "/cart/**", // Public access to certain routes
-                        "/books", "/books?page=**",  // Allow access to all book pages
-                        "/?name=*&namePublisher=*&fullNameAuthor=*&nameCategory=*&minPrice=*&maxPrice=*").permitAll() // Allow any values for these parameters
-                .requestMatchers("/**", "/users/**").hasRole("ADMIN") // Admin can access everything else
+                        "/book").permitAll() // Allow any values for these parameters
+                .requestMatchers("/**", "reports/**", "/users/**").hasRole("ADMIN") // Admin can access everything else
                 .anyRequest().authenticated() // Require authentication for all other requests
                 ).formLogin(form -> form
                 .loginPage("/login")

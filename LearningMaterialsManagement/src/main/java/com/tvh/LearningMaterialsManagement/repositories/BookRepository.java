@@ -42,8 +42,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             @Param("minPrice") Long minPrice,
             @Param("maxPrice") Long maxPrice);
 
-//    //Truy vấn này có phân trang
-//    // Paginated version of the search
+    //Truy vấn này có phân trang
+    // Paginated version of the search
     @Query("SELECT b FROM Book b "
             + "LEFT JOIN b.detailAuthorBookSet dA "
             + "LEFT JOIN b.detailCategoryBookSet dC "

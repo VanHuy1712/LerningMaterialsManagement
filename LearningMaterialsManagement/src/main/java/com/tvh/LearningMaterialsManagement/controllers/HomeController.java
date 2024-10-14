@@ -9,6 +9,8 @@ import com.tvh.LearningMaterialsManagement.services.BookService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +74,6 @@ public class HomeController {
 //
 //        return "index"; // Trả về template hiển thị sách
 //    }
-    
     @GetMapping("/")
     public String bookList(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -105,4 +106,36 @@ public class HomeController {
         return "index"; // Trả về template hiển thị sách
     }
     
+    @GetMapping("/book")
+    public String bookPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "8") int size,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "namePublisher", required = false) String namePublisher,
+            @RequestParam(value = "fullNameAuthor", required = false) String fullNameAuthor,
+            @RequestParam(value = "nameCategory", required = false) String nameCategory,
+            @RequestParam(value = "minPrice", required = false) Long minPrice,
+            @RequestParam(value = "maxPrice", required = false) Long maxPrice,
+            Model model) {
+
+        // Phân trang
+        Page<Book> booksPage = bookService.getBooksPaginated(page, size, name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
+
+        // Thêm danh sách sách và các thông tin khác vào model
+        model.addAttribute("books", booksPage.getContent()); // Danh sách sách của trang hiện tại
+        model.addAttribute("totalPages", booksPage.getTotalPages()); // Tổng số trang
+        model.addAttribute("currentPage", page); // Trang hiện tại
+        model.addAttribute("title", "Danh sách sách");
+
+        // Nếu bạn muốn hiển thị tham số tìm kiếm khi phân trang
+        model.addAttribute("name", name);
+        model.addAttribute("namePublisher", namePublisher);
+        model.addAttribute("fullNameAuthor", fullNameAuthor);
+        model.addAttribute("nameCategory", nameCategory);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+
+        return "index"; // Trả về template hiển thị sách
+    }
+
 }

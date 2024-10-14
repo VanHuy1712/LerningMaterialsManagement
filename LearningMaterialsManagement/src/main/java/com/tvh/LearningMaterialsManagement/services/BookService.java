@@ -173,9 +173,12 @@ public class BookService {
         return bookRepo.findAll(pageable);
     }
 
-    //Khong phan trang
-    public List<Book> searchBooks(String name, String namePublisher, String fullNameAuthor, String nameCategory, Long minPrice, Long maxPrice) {
-        return bookRepo.findBooksByCriteria(name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
+//    //Khong phan trang
+//    public List<Book> searchBooks(String name, String namePublisher, String fullNameAuthor, String nameCategory, Long minPrice, Long maxPrice) {
+//        return bookRepo.findBooksByCriteria(name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
+//    }
+    public Page<Book> searchBooks(String name, String namePublisher, String fullNameAuthor, String nameCategory, Long minPrice, Long maxPrice, Pageable pageable) {
+        return bookRepo.findAllByCriteria(pageable, name, namePublisher, fullNameAuthor, nameCategory, minPrice, maxPrice);
     }
 
     //Phân trang

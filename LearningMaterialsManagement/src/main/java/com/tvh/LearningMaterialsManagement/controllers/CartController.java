@@ -10,6 +10,7 @@ import com.tvh.LearningMaterialsManagement.models.DetailReceiptBook;
 import com.tvh.LearningMaterialsManagement.models.Discount;
 import com.tvh.LearningMaterialsManagement.models.Receipt;
 import com.tvh.LearningMaterialsManagement.models.User;
+import com.tvh.LearningMaterialsManagement.repositories.BookRepository;
 import com.tvh.LearningMaterialsManagement.repositories.DetailReceiptBookRepository;
 import com.tvh.LearningMaterialsManagement.repositories.ReceiptRepository;
 import com.tvh.LearningMaterialsManagement.services.BookService;
@@ -49,6 +50,8 @@ public class CartController {
     private DetailReceiptBookRepository detailReceiptBookRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private BookRepository bookRepo;
     @Autowired
     private DiscountService discountService;
     @Autowired
@@ -207,6 +210,11 @@ public class CartController {
                 detail.setQuantity(cartItem.getQuantity());
                 detail.setTotalUnitPrice(cartItem.getTotalPrice());
                 detailReceiptBookRepository.save(detail);
+
+                // Cập nhật số lượng sách
+                Book book = cartItem.getBook(); // Lấy sách từ CartItem
+                book.setAmount(book.getAmount() - cartItem.getQuantity()); // Giảm số lượng sách
+                bookRepo.save(book); // Lưu lại thay đổi
             }
         }
 

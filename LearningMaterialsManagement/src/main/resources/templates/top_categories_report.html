@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Báo cáo Top 5 Thể Loại Sách Bán Chạy</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            h1 {
+                text-align: center;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .chart-container {
+                display: flex;            /* Sử dụng flexbox */
+                justify-content: center;  /* Căn giữa theo chiều ngang */
+                align-items: center;      /* Căn giữa theo chiều dọc (nếu cần) */
+                margin: 20px auto;       /* Tạo khoảng cách trên và dưới, căn giữa theo chiều ngang */
+                width: 80%;               /* Độ rộng của biểu đồ */
+                height: 400px;           /* Chiều cao của biểu đồ */
+            }
+        </style>
+    </head>
+    <body>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <h1>Báo cáo Top 5 Thể Loại Sách Bán Chạy</h1>
+
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên Thể Loại</th>
+                    <th>Số lượng sách đã bán</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="stat : ${topCategories}">
+                    <td th:text="${stat[0]}">Tên thể loại</td>
+                    <td th:text="${stat[1]}">Số lượng</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script th:inline="javascript">
+            const topCategories = /*[[${topCategories}]]*/ [];
+
+            console.log("Top 5 thể loại từ Thymeleaf:", topCategories);
+
+            if (topCategories.length > 0) {
+                const labels = topCategories.map(function (stat) {
+                    return stat[0];
+                }); // Tên thể loại
+                const data = topCategories.map(function (stat) {
+                    return stat[1];
+                });  // Số lượng
+
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                const categoryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: 'Số lượng sách đã bán',
+                                data: data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Số lượng sách đã bán'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Thể loại sách'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Top 5 Thể Loại Sách Bán Chạy'
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.log("Không có dữ liệu để hiển thị.");
+            }
+        </script>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </body>
+</html>
